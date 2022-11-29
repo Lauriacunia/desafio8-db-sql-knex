@@ -46,10 +46,12 @@ router.put("/:id", async (req, res) => {
       req.params.id,
       req.body
     );
-    res.json({
-      message: "Producto actualizado correctamente",
-      id: productoActualizado._id,
+
+    res.status(200).json({
+      message: "Producto actualizado con éxito",
+      producto: productoActualizado,
     });
+   
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

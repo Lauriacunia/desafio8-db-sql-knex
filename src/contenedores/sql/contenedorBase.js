@@ -28,29 +28,31 @@ class ContenedorBase {
   }
   async create(body) {
     try {
-      const product = await db(this.table).insert(body);
-      const new_product = await db(this.table).select("*").where("id", product);
-      res.status(201).json({
-        message: "Product created",
-        new_product: new_product,
-      });
+      const new_product_id = await db(this.table).insert(body);
+      const new_product = await db(this.table).select("*").where("id", new_product_id);
+      return new_product;
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return error.message;
     }
   }
   async update(id, body) {
     try {
-      const { name, description, price, thumbnail, code, stock } = req.body;
-      await db(this.table).where("id", id).update(body);
-      const product_updated = await knex(options.mysql)("products")
-        .select("*")
-        .where("id", id);
-      res.status(200).json({
-        message: "Product updated",
-        product: product_updated,
-      });
+      const { nombre, descripcion, codigo, foto, precio, stock } = body;
+      const timestamp = new Date();
+      await db(this.table).where("id", id).update({
+        nombre,
+        descripcion,
+        codigo,
+        foto,
+        precio,
+        stock,
+        timestamp,
+        });
+      const updated_product = this.getOne(id);
+      return updated_product;
+
     } catch (error) {
-      res.status(500).json({ message: error.message });
+      return error.message;
     }
   }
   async deleteById(id) {
