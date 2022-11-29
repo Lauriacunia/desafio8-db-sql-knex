@@ -91,19 +91,19 @@ router.post("/:idCarrito/productos/:idProducto", async (req, res) => {
 });
 
 // TODO:  borrar un producto de un carrito
-router.delete("/:id/productos/:productoId", async (req, res) => {
+router.delete("/:idCarrito/productos/:idProducto", async (req, res) => {
   try {
-    const carrito = await contenedor.getOne(req.params.id);
-    const productoId = req.params.productoId;
-    if (carrito && productoId) {
-      const carritoUpdated = await contenedor.deleteProducto(
-        carrito,
-        productoId
-      );
-      const newCarrito = await contenedor.getOne(carritoUpdated._id);
+    const idCarrito = req.params.idCarrito;
+    const idProducto = req.params.idProducto;
+    const carrito = await contenedor.getOne(idCarrito);
+    const producto = await contenedor.getOne(idProducto);
+    if (idCarrito && idProducto) {
+      await contenedor.borrarProducto(idCarrito, idProducto);
+
       res.status(200).json({
         message: "Producto eliminado con éxito",
-        carrito: newCarrito,
+        carrito: idCarrito,
+        producto: idProducto,
       });
     }
     if (!carrito) {
@@ -111,11 +111,12 @@ router.delete("/:id/productos/:productoId", async (req, res) => {
         .status(404)
         .json({ message: "Carrito no encontrado. id: " + req.params.id });
     }
-    if (!productoId) {
-      res.status(404).json({ message: "El producto no existe" });
+    if (!producto) {
+      res.status(404).json({ message: "La lista de productos está vacía" });
     }
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+  }
+  catch (err) {
+    res.status(500).json({ message: err.message, line: err.line });
   }
 });
 

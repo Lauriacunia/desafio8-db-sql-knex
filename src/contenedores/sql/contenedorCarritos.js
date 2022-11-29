@@ -4,28 +4,46 @@ import { options } from "../../config/configDB.js";
 const db = knex(options.mysql);
 class ContenedorCarritos extends ContenedorBase {
   constructor() {
-   // this.carritos = [];
+    // this.carritos = [];
     /** 🗨 Ésta clase hereda de ContenedorBase por lo que puede acceder
      * a todos sus métodos y propiedades.
      */
     super("carritos");
   }
 
-  /** Este contenedor va a utilizar los métodos de su padre 
+  /** Este contenedor va a utilizar los métodos de su padre
    *  y agregar los métodos específicos de carritos.
    */
   async agregarProducto(idCarrito, idProducto) {
     try {
       /** Utiliza tabla intermedia carritos_productos y carga los FK id */
-     await db("carritos_productos").insert({
+      await db("carritos_productos").insert({
         carrito_id: idCarrito,
         producto_id: idProducto,
       });
     } catch (error) {
       return error.message;
     }
-
   }
+
+  async borrarProducto(idCarrito, idProducto) {
+    try {
+      /** Utiliza tabla intermedia carritos_productos y carga los FK id */
+      await db("carritos_productos")
+        .where("carrito_id", idCarrito)
+        .andWhere("producto_id", idProducto)
+        .del();
+    } catch (error) {
+      return error.message;
+    }
+  }
+
+  
 }
+
+    
+
+
+
 
 export default ContenedorCarritos;
