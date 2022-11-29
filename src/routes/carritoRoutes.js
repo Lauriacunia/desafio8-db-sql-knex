@@ -39,31 +39,42 @@ router.post("/", async (req, res) => {
   }
 });
 
-// TODO: listas productos de un carrito
-router.get("/:id/productos", async (req, res) => {
+// borrar un carrito por id
+router.delete("/:id", async (req, res) => {
   try {
     const carrito = await contenedor.getOne(req.params.id);
-    carrito
-      ? res.status(200).json(carrito.productos)
-      : res
-          .status(404)
-          .json({ message: "Carrito no encontrado. id: " + req.params.id });
+    if (carrito) {
+      const carritoDeleted = await contenedor.deleteById(req.params.id);
+      res.status(200).json({
+        message: "Carrito eliminado con éxito",
+        carrito: carritoDeleted,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ message: "Carrito no encontrado. id: " + req.params.id });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
 
-//TODO: agregar productos a un carrito
-router.post("/:id/productos", async (req, res) => {
+
+
+// agregar un producto a un carrito
+router.post("/:idCarrito/productos/:idProducto", async (req, res) => {
   try {
-    const carrito = await contenedor.getOne(req.params.id);
-    const productos = req.body; // array de objetos
-    if (carrito && productos) {
-      const carritoUpdated = await contenedor.addProductos(carrito, productos);
-      const newCarrito = await contenedor.getOne(carritoUpdated._id);
+    const idCarrito = req.params.idCarrito;
+    const idProducto = req.params.idProducto;
+    const carrito = await contenedor.getOne(idCarrito);
+    const producto = await contenedor.getOne(idProducto);
+    if (idCarrito && idProducto) {
+      await contenedor.agregarProducto(idCarrito, idProducto);
+
       res.status(201).json({
-        message: "Productos agregados con éxito",
-        carrito: newCarrito,
+        message: "Producto agregados con éxito",
+        carrito: idCarrito,
+        producto: idProducto,
       });
     }
     if (!carrito) {
@@ -71,7 +82,7 @@ router.post("/:id/productos", async (req, res) => {
         .status(404)
         .json({ message: "Carrito no encontrado. id: " + req.params.id });
     }
-    if (!productos) {
+    if (!producto) {
       res.status(404).json({ message: "La lista de productos está vacía" });
     }
   } catch (err) {
@@ -79,7 +90,7 @@ router.post("/:id/productos", async (req, res) => {
   }
 });
 
-// borrar un producto de un carrito
+// TODO:  borrar un producto de un carrito
 router.delete("/:id/productos/:productoId", async (req, res) => {
   try {
     const carrito = await contenedor.getOne(req.params.id);
@@ -108,21 +119,16 @@ router.delete("/:id/productos/:productoId", async (req, res) => {
   }
 });
 
-// borrar un carrito por id
-router.delete("/:id", async (req, res) => {
+
+// TODO: listas productos de un carrito
+router.get("/:id/productos", async (req, res) => {
   try {
     const carrito = await contenedor.getOne(req.params.id);
-    if (carrito) {
-      const carritoDeleted = await contenedor.deleteById(req.params.id);
-      res.status(200).json({
-        message: "Carrito eliminado con éxito",
-        carrito: carritoDeleted,
-      });
-    } else {
-      res
-        .status(404)
-        .json({ message: "Carrito no encontrado. id: " + req.params.id });
-    }
+    carrito
+      ? res.status(200).json(carrito.productos)
+      : res
+          .status(404)
+          .json({ message: "Carrito no encontrado. id: " + req.params.id });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
