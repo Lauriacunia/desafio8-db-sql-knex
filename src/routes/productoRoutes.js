@@ -59,13 +59,13 @@ router.put("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
   try {
-    const productoBorrado = await contenedor.delete(req.params.id);
-    res.json({
-      message: "Producto borrado correctamente",
-      id: productoBorrado._id,
-    });
+    const fueBorrado = await contenedor.deleteById(req.params.id);
+    fueBorrado
+      ? res.status(200).json({ message: "Producto borrado con éxito", id: req.params.id })
+      : res.status(404).json({ message: "Producto no encontrado: id "  + req.params.id });
+    
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    return err.message;
   }
 });
 

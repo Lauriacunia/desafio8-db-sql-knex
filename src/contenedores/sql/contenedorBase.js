@@ -57,12 +57,15 @@ class ContenedorBase {
   }
   async deleteById(id) {
     try {
-      const { id } = req.params;
-      const product = await db(this.table).where("id", id).del();
-      res.status(200).json({
-        message: "Product deleted",
-        product_id: product,
-      });
+      /**🗨 Revisar en la documentación que retorna cada query
+       * Aqui retorna '0' si no se borra nada y '1' si se borra algo
+       */
+      const productoBorrado = await db(this.table).where("id", id).del();
+      if (productoBorrado > 0) {
+        return true;
+      } else {
+        return false;
+      }
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
