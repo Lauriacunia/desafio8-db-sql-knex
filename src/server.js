@@ -5,6 +5,8 @@ import apiRouter from "./routes/indexRoutes.js";
 import cors from "cors";
 import { Server as ioServer} from "socket.io";
 import chat from "./websocket/chat.js";
+import * as dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
 const PORT = 8080 || process.env.PORT;
@@ -36,16 +38,6 @@ app.use(
 /** ROUTER */
 app.use("/api", apiRouter);
 
-/** CONNECTION SERVER HTTP*/
-// try {
-//   httpServer.listen(PORT, () => {
-//     console.log(
-//       `🚀 Server started on PORT ${PORT} at ${new Date().toLocaleString()}`
-//     );
-//   });
-// } catch (error) {
-//   console.log("Error de conexión con el servidor...", error);
-// }
 
 const server = app.listen(PORT, () =>
    console.log(

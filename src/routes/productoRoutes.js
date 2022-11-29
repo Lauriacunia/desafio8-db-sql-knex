@@ -18,11 +18,11 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const producto = await contenedor.getOne(req.params.id);
-    producto
-      ? res.status(200).json(producto)
-      : res
-          .status(404)
-          .json({ message: "Producto no encontrado. id: " + req.params.id });
+    if(producto.length > 0) {
+      res.status(200).json(producto);
+    } else {
+      res.status(404).json({ message: "Producto no encontrado: id "  + req.params.id });
+    }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

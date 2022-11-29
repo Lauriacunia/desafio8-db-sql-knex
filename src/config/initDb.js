@@ -1,29 +1,29 @@
 import { options } from './configDB.js';
 import knex from 'knex';
 
-const products = [
+const productos = [
     {
-        "name": "Remera",
-        "description": "Talle 2",
-        "code": 24567,
-        "thumbnail": "htttt/jkljkhj",
-        "price": 4500,
+        "nombre": "Remera",
+        "descripcion": "Talle 2",
+        "codigo": 24567,
+        "foto": "htttt/jkljkhj",
+        "precio": 4500,
         "stock": 23
     },
     {
-        "name": "Pantalón",
-        "description": "Talle 3",
-        "code": 24987,
-        "thumbnail": "htttt/jkljkhj",
-        "price": 3500,
+        "nombre": "Pantalón",
+        "descripcion": "Talle 3",
+        "codigo": 24987,
+        "foto": "htttt/jkljkhj",
+        "precio": 3500,
         "stock": 45
     },
     {
-        "name": "Vestido ",
-        "description": "Talle 4",
-        "code": 36987,
-        "thumbnail": "htttt/jkljkhj",
-        "price": 7500,
+        "nombre": "Vestido ",
+        "descripcion": "Talle 4",
+        "codigo": 36987,
+        "foto": "htttt/jkljkhj",
+        "precio": 7500,
         "stock": 6
     },
 ];
@@ -32,18 +32,19 @@ const products = [
     const db = knex(options.mysql);
     try {
         /**create table */
-        await db.schema.createTableIfNotExists('products', (table) => {
+        await db.schema.createTableIfNotExists('productos', (table) => {
             table.increments('id').primary();
-            table.string('name');
-            table.string('description');
-            table.integer('price');
+            table.string('nombre');
+            table.string('descripcion');
+            table.integer('precio');
             table.integer('stock');
-            table.string('thumbnail');
-            table.string('code');
+            table.string('foto');
+            table.string('codigo');
+            table.dateTime('timestamp').defaultTo(db.fn.now());
         });
         /** 🦸‍♀️ CREATE - Insert raw (insertar uno o mas  registro(s))*/
-        await db('products').insert(products);
-        console.log('Datos insertados');
+        await db('productos').insert(productos);
+        console.log("✅ Datos insertados con éxito 🎉");
        
     } catch (err) {
         console.log(err);
