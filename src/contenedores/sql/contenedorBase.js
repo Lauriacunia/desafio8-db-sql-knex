@@ -1,7 +1,7 @@
 import knex from "knex";
 import { options } from "../../config/configDB.js";
 const db = knex(options.mysql);
-//const table = "productos";
+
 
 /**🗨 Éstas líneas realizan un CRUD para cualquier entidad 
  *   reciben el nombre de la tabla a utilizar en su constructor.

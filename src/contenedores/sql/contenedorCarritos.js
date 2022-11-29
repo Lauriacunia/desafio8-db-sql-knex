@@ -6,7 +6,7 @@ class ContenedorCarritos extends ContenedorBase {
     /** 🗨 Ésta clase hereda de ContenedorBase por lo que puede acceder
      * a todos sus métodos y propiedades.
      */
-    super();
+    super("carritos");
   }
 }
 

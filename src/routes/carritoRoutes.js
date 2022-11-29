@@ -39,7 +39,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// listas productos de un carrito
+// TODO: listas productos de un carrito
 router.get("/:id/productos", async (req, res) => {
   try {
     const carrito = await contenedor.getOne(req.params.id);
@@ -53,7 +53,7 @@ router.get("/:id/productos", async (req, res) => {
   }
 });
 
-//agregar productos a un carrito
+//TODO: agregar productos a un carrito
 router.post("/:id/productos", async (req, res) => {
   try {
     const carrito = await contenedor.getOne(req.params.id);
@@ -108,5 +108,24 @@ router.delete("/:id/productos/:productoId", async (req, res) => {
   }
 });
 
+// borrar un carrito por id
+router.delete("/:id", async (req, res) => {
+  try {
+    const carrito = await contenedor.getOne(req.params.id);
+    if (carrito) {
+      const carritoDeleted = await contenedor.deleteById(req.params.id);
+      res.status(200).json({
+        message: "Carrito eliminado con éxito",
+        carrito: carritoDeleted,
+      });
+    } else {
+      res
+        .status(404)
+        .json({ message: "Carrito no encontrado. id: " + req.params.id });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 export default router;
